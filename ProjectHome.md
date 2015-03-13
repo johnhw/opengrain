@@ -1,0 +1,1 @@
+OpenGrain is a flexible and powerful API for performing granular synthesis. It is written in plain C and runs on any platform which Portaudio supports.
