@@ -1,0 +1,797 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svnroot/opengrain/!svn/ver/71/src
+END
+impulsetrigger.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/1/src/impulsetrigger.c
+END
+hrtf.c
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svnroot/opengrain/!svn/ver/46/src/hrtf.c
+END
+trigger.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/7/src/trigger.c
+END
+impulsetrigger.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/1/src/impulsetrigger.h
+END
+hrtf.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svnroot/opengrain/!svn/ver/37/src/hrtf.h
+END
+trigger.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/1/src/trigger.h
+END
+sys_dummy_audio.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svnroot/opengrain/!svn/ver/67/src/sys_dummy_audio.c
+END
+grain_stream.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/46/src/grain_stream.c
+END
+grain_stream.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/46/src/grain_stream.h
+END
+spatializer.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/47/src/spatializer.c
+END
+spatializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/47/src/spatializer.h
+END
+compressor.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/compressor.c
+END
+allpass.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/2/src/allpass.c
+END
+compressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/compressor.h
+END
+feedbackdelay.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/feedbackdelay.c
+END
+allpass.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/1/src/allpass.h
+END
+sys_audio.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/67/src/sys_audio.h
+END
+moddelayline.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/37/src/moddelayline.c
+END
+feedbackdelay.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/feedbackdelay.h
+END
+moddelayline.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/37/src/moddelayline.h
+END
+convolver.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/convolver.c
+END
+pool.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svnroot/opengrain/!svn/ver/1/src/pool.h
+END
+sinegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/1/src/sinegrain.c
+END
+single_distribution.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/opengrain/!svn/ver/1/src/single_distribution.c
+END
+convolver.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/convolver.h
+END
+wavegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/7/src/wavegrain.c
+END
+sinegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/1/src/sinegrain.h
+END
+single_distribution.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/opengrain/!svn/ver/1/src/single_distribution.h
+END
+wavegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/1/src/wavegrain.h
+END
+acoustics.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/37/src/acoustics.c
+END
+dsfgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/18/src/dsfgrain.c
+END
+grain.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/42/src/grain.c
+END
+output.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/67/src/output.c
+END
+rms.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svnroot/opengrain/!svn/ver/1/src/rms.c
+END
+dsfgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svnroot/opengrain/!svn/ver/3/src/dsfgrain.h
+END
+acoustics.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/37/src/acoustics.h
+END
+sys_portaudio.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/71/src/sys_portaudio.c
+END
+output.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/67/src/output.h
+END
+eq.c
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svnroot/opengrain/!svn/ver/1/src/eq.c
+END
+grain.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/42/src/grain.h
+END
+rms.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svnroot/opengrain/!svn/ver/1/src/rms.h
+END
+sys_portaudio.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/19/src/sys_portaudio.h
+END
+eq.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svnroot/opengrain/!svn/ver/1/src/eq.h
+END
+analoggrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/21/src/analoggrain.c
+END
+curve.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/41/src/curve.c
+END
+analoggrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/20/src/analoggrain.h
+END
+stream_fx.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/stream_fx.c
+END
+curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/44/src/curve.h
+END
+multisinegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/1/src/multisinegrain.c
+END
+stream_fx.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/stream_fx.h
+END
+multisinegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/1/src/multisinegrain.h
+END
+audio.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/44/src/audio.c
+END
+audio.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/52/src/audio.h
+END
+crossdelay.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/32/src/crossdelay.c
+END
+buffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/43/src/buffer.c
+END
+complex_fmgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/opengrain/!svn/ver/1/src/complex_fmgrain.c
+END
+crossdelay.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/32/src/crossdelay.h
+END
+buffer.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/43/src/buffer.h
+END
+complex_fmgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/opengrain/!svn/ver/1/src/complex_fmgrain.h
+END
+grain_source.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/grain_source.c
+END
+fmgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svnroot/opengrain/!svn/ver/53/src/fmgrain.c
+END
+grain_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/grain_source.h
+END
+fmgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svnroot/opengrain/!svn/ver/56/src/fmgrain.h
+END
+impulsegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/16/src/impulsegrain.c
+END
+utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/43/src/utils.c
+END
+complex_buffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/opengrain/!svn/ver/35/src/complex_buffer.c
+END
+chorus.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/45/src/chorus.c
+END
+impulsegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/16/src/impulsegrain.h
+END
+complex_buffer.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/9/src/complex_buffer.h
+END
+utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/43/src/utils.h
+END
+simplewav.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/simplewav.c
+END
+chorus.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/44/src/chorus.h
+END
+simplewav.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/7/src/simplewav.h
+END
+envelope.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/43/src/envelope.c
+END
+grain_model.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/42/src/grain_model.c
+END
+envelope.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/43/src/envelope.h
+END
+grain_tests.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/50/src/grain_tests.c
+END
+wavereader.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/18/src/wavereader.c
+END
+trigger_tests.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/trigger_tests.c
+END
+grain_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/42/src/grain_model.h
+END
+grain_tests.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/44/src/grain_tests.h
+END
+wavereader.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/7/src/wavereader.h
+END
+trigger_tests.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/trigger_tests.h
+END
+widener.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/1/src/widener.c
+END
+pluckgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/7/src/pluckgrain.c
+END
+distributions.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/distributions.c
+END
+widener.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/1/src/widener.h
+END
+pluckgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/pluckgrain.h
+END
+distributions.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/src/distributions.h
+END
+location.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/33/src/location.c
+END
+rc_generator.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/rc_generator.c
+END
+libsndfile.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/45/src/libsndfile.c
+END
+location.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/23/src/location.h
+END
+rc_generator.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/rc_generator.h
+END
+random_reverb.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/50/src/random_reverb.c
+END
+random_reverb.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/opengrain/!svn/ver/37/src/random_reverb.h
+END
+glissgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/glissgrain.c
+END
+biquad.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/26/src/biquad.c
+END
+grainmixer.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/71/src/grainmixer.c
+END
+delayline.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/1/src/delayline.c
+END
+resonator_bank.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/opengrain/!svn/ver/45/src/resonator_bank.c
+END
+glissgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/glissgrain.h
+END
+biquad.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/43/src/biquad.h
+END
+grainmixer.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/71/src/grainmixer.h
+END
+delayline.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/opengrain/!svn/ver/1/src/delayline.h
+END
+resonator_bank.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/opengrain/!svn/ver/45/src/resonator_bank.h
+END
+padsyngrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/7/src/padsyngrain.c
+END
+padsyngrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/1/src/padsyngrain.h
+END
+reverb.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/2/src/reverb.c
+END
+voicegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/18/src/voicegrain.c
+END
+loopgrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/18/src/loopgrain.c
+END
+reverb.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/opengrain/!svn/ver/1/src/reverb.h
+END
+voicegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/14/src/voicegrain.h
+END
+pitchtrigger.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/18/src/pitchtrigger.c
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/67/src/CMakeLists.txt
+END
+svf.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svnroot/opengrain/!svn/ver/44/src/svf.c
+END
+noisegrain.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/noisegrain.c
+END
+loopgrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/44/src/loopgrain.h
+END
+wavewriter.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/45/src/wavewriter.c
+END
+pitchtrigger.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/pitchtrigger.h
+END
+svf.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svnroot/opengrain/!svn/ver/44/src/svf.h
+END
+noisegrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/1/src/noisegrain.h
+END
+matrix.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/41/src/matrix.c
+END
+wavewriter.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svnroot/opengrain/!svn/ver/43/src/wavewriter.h
+END
+matrix.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/41/src/matrix.h
+END
+random.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/30/src/random.c
+END
+interpolator.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/interpolator.c
+END
+random.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/opengrain/!svn/ver/29/src/random.h
+END
+opengrain.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/60/src/opengrain.h
+END
+interpolator.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/src/interpolator.h
+END
+opengrain.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/7/src/opengrain.h.in
+END
+soundfile.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/opengrain/!svn/ver/45/src/soundfile.h
+END

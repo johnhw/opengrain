@@ -1,0 +1,10 @@
+Depends:
+PortAudio: MIT
+libsndfile: LGPL
+libresample: LGPL
+
+Includes:
+SimCList: BSD
+[ISAAC] rand.c: Public Domain
+KissFFT: BSD
+MIT HRTF: No restrictions, must cite

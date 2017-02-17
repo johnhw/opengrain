@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html>
+<head>
+<link type = "text/css" rel = "stylesheet" href ="style.css">  
+<title> OpenGrain developers </title>
+</head>
+<body>
+
+<div class = "mbody"> 
+<img src="opengrain-large.png"><br>
+
+If you're developing for OpenGrain, this document contains some guidance as to the coding style and structure of the codebase.
+
+<h2> How OpenGrain works </h2>
+
+<center><img src="internals.png"></center><br>
+Grains are arranged in <b>GrainStream</b>s. Each <b>GrainStream</b> has a specification for generating grains (amplitude, rate, duration envelope), which is stored in a <b>GrainModel</b> and
+a source distribution which selects one from a number of <b>GrainSource</b>s. Each <b>GrainStream</b> has one or more <b>GrainSource</b> objects, which describe how to fill the specific parameters
+of a <b>Grain</b> for a particular grain type (e.g. the frequency and modulation index for an FM grain). When a grain is generated, its general parameters are sampled from the <b>GrainModel</b>, and its synthesis-mode-specific values are sampled using the <b>GrainSource</b>.
+This <b>Grain</b> object is then added to the <b>GrainStream</b>'s active list.
+<br><br>
+Each active <b>Grain</b> is synthesized and results in a mono audio stream. This stream is fed to the <b>Spatializer</b>, which spatializes each grain onto a number of output channels. The spatialization can either be per-grain or per-stream. The spatialized output is fed to a bank of per-stream effects (including resonators, virtual analog filters, FIR convolution, delays and choruses). The output of this sequence is one stream of grains.
+<br><br>
+Any number of these streams are then mixed by a <b>GrainMixer</b>, which subsequently applies global master effects (compression, EQ, stereo widening, and global reverb). This is then mixed into the final output buffer.
+<br><br>
+Every grain type has two structures: a parameter set, which contains the distributions for samping grains, and an active structure,
+which contains one instance sampled from that set. For example, <b>SineGrainParameters</b> has a <b>Distribution</b> over frequencies and each <b>SineGrain</b> has a specific frequency. Each <b> Grain </b> has a set of general values that apply to all grains, and a specifics
+pointer which points to the structure holding the parameters for this specific type of grain.
+<br><br>
+<center><img src="grain.png"></center>
+
+
+
+<h2>Coding style</h2>
+<div class = "indent">
+    Identifiers should not be abbreviated, and should be clear, even if that
+    results in long identifiers! Functions
+    are usually of the form some_action_object_type (lower case, underscore,
+    with the last part giving the type the function operates on). Data
+    structures are of the form ObjectType (capitalized initial letters).
+    Variables should be descriptive, except for index variables like i or j. <br><br>
+
+    Modules should be as short and simple as possible. <br><br>
+
+    Objects should be allocated dynamically, and as little allocation as possible
+    should happen during synthesis.  <br><br>
+    
+    Objects should usually have a create_xxx() and destroy_xxx() function 
+    which take _no other arguments_ and simply allocate and possibly set 
+    defaults. Configuration of the object should be done separately from 
+    allocation. <br><br>
+            
+    Avoid hard-coded limits -- use dynamically sizable containers. <br><br>
+    
+    No C99 extensions (except C++ style // comments). Sadly Microsoft aren't
+    likely to support C99 anytime soon. <br><br>
+    
+    If a parameter could be usefully used stochastically/in a time-varying way,
+    use a Distribution to specify it. <br><br>
+    
+    Use sensible units wherever possible. Times should be seconds, 
+    frequencies in Hz, and gain levels in decibels.  <br><br>
+    
+</div>
+    
+<h2> Optimization </h2>    
+If you want to optimize some of the code:
+<br><br>
+<div class="indent">
+    If the optimization doens't make the code less clear/simple, just fix it
+    in the reference module file.<br><br>
+    
+    If the optimization is complex or messy (#ifdefs, unrolled loops etc.),
+    or if it uses any platform specific code at all (ASM, relying on byte
+    orders, GCC extensions) it should go in a xxx_opt.c/.h file and CMake 
+    will choose that version if an optimized build is made. 
+</div>
+
+
+
+</div>
+</body>
+</html>
+

@@ -1,0 +1,372 @@
+* multichannel
+* envelope functions / trajectories / exp, linear, step, hermite
+* interpolating svf, biquad
+* error reporting
+* grain filter (optional, option set per stream)
+* grain sync 
+* linked distributions (distribution b = fn(a))
+* grainstream source
+* generalize triggers to parameter estimation
+* live granulation
+* complex fm grain (asym, 4 op, noise, algorithms, frequency env., modulation env)
+* api
+* python wrapper
+* iOS build
+* multiband FX: compressor/gain, delay, distortion/excitation
+* feedback delay networks (modulated delays, in matrix, cross matrix, out matrix)
+* mesh output
+* reverb interpolation / acoustics module
+* loop grain (LA synthesis)
+* flite
+
+* ambience
+    * distributions for parameters (multi-sample and then crossfade)
+    * from wave (zero padding for smoothness)
+    * padsynth algorithm (chords, noise, bw, harmonics, falloff)
+    * add resonances, notches (distributions)
+    * spectral effects (smooth, sharpen, expand, contract, shift)
+    * layering loops
+    
+
+* youtube videos
+* Demos
+    * opengl pulses -> single circle, multiple, async, spatialization, waveforms
+    * wave stretching
+    * slider
+    * old granular demo
+    * iOS demo
+    * VST example
+    
+    
+* ambience samples
+    
+    
+id = grReadySample(waveform);
+grBindSample(id);
+grSampleParameteri(GR_SAMPLE_LOOPS, 0);
+grSampleParameteri(GR_SAMPLE_AMPLTIUDE, -20.0);
+grTriggerSample();
+
+
+    
+id = ready_sample_stream(sound)
+set_loops_sample_stream(id, loops)
+set_amplitude_sample_stream(id, amp)
+set_location_sample_stream(id, location)
+set_rate_sample_stream(id, rate)
+trigger_sample_stream(id, when)
+
+get_sample_position_stream(id)
+stop_sample_stream(id)
+
+
+acoustics module
+    dattoro reverb + random reverb
+    two parallel copies, with crossfade
+    get/edit the non active one.
+    set size/adjust parameters without glitches
+    
+    
+general feedback delay network
+    array of moddelaylines
+    length, modulation and modulation freq for each
+    input matrix (inputs * delays)
+    feedback matrix (delays * delays)
+    feedforward matrix (delays * outputs)
+    
+
+typedef struct Matrix
+{
+    int n, m;
+    float *values;
+} Matrix;
+    
+create_matrix(int n, int m)
+destroy_matrix(matrix)
+set_matrix(matrix, i, j, value)
+copy_matrix(dest, source)
+add_matrix(dest, source)
+multiply_vector_matrix(matrix, float *values)
+
+
+    
+network of units
+
+unit connected via buses
+
+n_input_channels, n_output_channels, mixing matrix
+buffers for each input and output channel
+
+typedef void (*ProcessFunction)(void *data, Buffer **buffers, int n_buffers);
+
+Unit *get_unit_reverb(DattoroReverb *reverb);
+
+typedef struct Unit
+{
+    void *value;
+    ProcessFunction process;
+} Unit;
+
+typedef struct Bus
+{
+    Buffer **in_buffers;
+    Buffer **out_buffers;      
+} Bus;
+
+typedef struct BusConnector
+{
+    Unit *unit;
+    Bus *bus;
+    int inout;
+}    
+
+create_bus()
+destroy_bus()
+set_in_channels_bus(bus)
+set_out_channels(bus)
+connect_bus(bus, source, destination)
+disconnect_bus(bus)
+void set_matrix_bus(bus, float *matrix);
+float *get_matrix(bus);
+int get_in_channels_bus(bus);
+int get_out_channels_bus(bus);
+
+
+go to top of generator tree
+    
+
+
+
+
+grGenAmbience(1, &ambience);
+grBindAmbience(ambience);
+
+frequencies = gruCreateDistributionq(GR_DISTRIBUTION_GAUSSIAN, 36.0, 5.0, 0.0);
+grBindDistribution(frequencies);
+grSetDistributionFunction(GR_MIDI_NOTE_TO_FREQUENCY);
+
+grBegin(GR_AMBIENCE_SECTION);
+grAddHarmonics(grSample(frequencies), 0.9, 0.3)
+grAddResonance(2000.0, 0.2)
+grEnd();
+
+    
+grCurve(GR_DISTRIBUTION_MEAN);
+grCurveMode(GR_CURVE_LINEAR);
+grBegin(GR_CURVE);
+grCurvePoint2f(0.0, 0.5);
+grCurveLoopStart();
+grCurveMode(GR_CURVE_EXP);
+grCurveAdvanceTime(0.5);
+grCurvePointf(1.0);
+grCurveAdvanceTime(0.1);
+grCurveLoopEnd();
+grCurvePointf(0.0);
+grEnd(GR_CURVE);
+
+grCurve(GR_DISTRIBUTION_WEIGHTS);
+grBegin(GR_CURVE);
+grCurveTime(1.0);
+grCurvePointfv(&weights);
+grEnd(GR_CURVE);
+
+grGetCurveIndex()
+grSetCurveIndex()
+
+
+
+I want to port, but I don't want to/can't port PortAudio?
+
+I just want to load and play a sample in 3D!
+int stream, source;
+grInitAudio();
+
+
+// Devices, streams, sources, distributions, waveforms, processor
+
+grBindStream(stream_1);
+grSynchronizeStream(stream_2);
+
+grGenDistribution(1, &distribution);
+grBindDistribution(distribution);
+grDistributionLinkFunction(other_distribution, callback);
+grDistributionLinkScaleOffsetf(other_distribution, 1.0, 0.0);
+grLinkDistribution(other_distribution);
+
+
+grGenProcessor(1, &processor);
+grBindProcessor(processor);
+grProcessorType(GR_IMPULSE_TRIGGER);
+grProcessorParameteri(GR_IMPULSE_PROCESSOR, GR_PROCESSOR_TARGET, stream);
+grAttachProcessor();
+
+grGetLastError();
+grGetStringLastError();
+grPrintLastError();
+
+grGenProcessor(1, &processor);
+grBindProcessor(processor);
+grProcessorType(GR_PITCH_TRACKER);
+grProcessorParameterv(GR_PITCH_TRACKER, GR_FREQUENCY_TARGET, &frequency);
+grProcessorParameteri(GR_PITCH_TRACKER, GR_WINDOW_LENGTH, 512);
+grAttachProcessor();
+
+
+
+
+grGenStream(1, &stream);
+grGenSource(1, &source);
+
+grBindStream(stream);
+grAddSource(source);
+grBindSource(source);
+grSourceType(GR_IMPULSE);
+
+grGenWaveform(1, &waveform);
+grBindWaveform(waveform);
+grLoadWaveform("ping.wav");
+grCopyWaveform(other_waveform);
+grFilterWaveform(500.0, 1.0, GR_FILTER_LOWPASS);
+grGainWaveform(-20.0);
+grTrimWaveform(0.1, -0.05); [0.1 -> 0.05]
+
+
+// or grLoadWaveformFromString(&data, GR_CHANNELS_2, GR_FORMAT_S16, GR_ENDIANNESS_CPU);
+grSourceParameteri(GR_WAVE_SOURCE, waveform);
+
+grStreamParameteri(GR_STREAM, GR_TRIGGER_MODE, GR_MODE_TRIGGERED);
+grStreamParameteri(GR_SPATIALIZATION, GR_SPATIALIZATION_MODE, GR_3D_HRTF);
+grStreamParameteri(GR_SPATIALIZATION, GR_DIFFUSE_REVERB_LEVEL, -GR_INF_DB);
+
+
+
+
+grStreamParameteri(GR_STREAM, GR_SPATIALIZATION_COORDINATES, GR_SPATIAL_CARTESIAN);
+
+grStreamParameterf(GR_SPATIALIZATION, GR_SPATIALIZATION_X, 1.0);
+grStreamParameterf(GR_SPATIALIZATION, GR_SPATIALIZATION_Y, 50.0);
+grStreamParameterf(GR_SPATIALIZATION, GR_SPATIALIZATION_Z, 120.0);
+
+float pos[3] = {1.0, 50.0, 20.0};
+grStreamParameterfv(GR_SPATIALIZATION, GR_POSITION_POINTS, &pos[0]);
+
+grTrigger2f(GR_TRIGGER_STOCHASTIC, 1, 0.0, 0.0);
+
+grStartAudio();
+grStopAudio();
+grShutdownAudio();
+
+
+grAudioParameteri(GR_LOOP_MODE, GR_PUMP_THREAD);  // or GR_PUMP_MANUAL or GR_PUMP_SYSTEM_CALLBACK
+grAudioParameteri(GR_SAMPLE_RATE, 44100);
+grAudioParameteri(GR_BIT_DEPTH, 16);
+grAudioParameterf(GR_LATENCY, 0.05);
+grAudioParameteri(GR_LATENCY, GR_LATENCY_MINIMUM);
+grGetIntegerv(GR_N_DEVICES);
+grGetAudioDeviceName(0);
+
+grAudioParameteri(GR_DEVICE, 0);
+
+
+grInitAudio();
+grStartAudio();
+
+grEnable(GR_RECORDING);
+grRecordingParameters(GR_RECORDING_PATH, "output");
+grRecordingParameteri(GR_OVERWRITE_MODE, GR_OVERWRITE_APPEND);
+grRecordingParameteri(GR_STEREO_MODE, GR_STEREO_MONO_MID);
+grRecordingParameteri(GR_BIT_DEPTH, GR_BIT_DEPTH_24);
+
+grGetStringv(GR_DRIVER_NAME, &driver_name);
+
+grGetFloatv(GR_LATENCY, &latency);
+grGetIntegerv(GR_LATENCY_SAMPLES, &latency);
+grGetIntegerv(GR_SAMPLE_RATE, &sample_rate);
+grGetStringv(GR_ACTIVE_DEVICE_NAME, &name);
+
+grEnable(GR_REVERB);
+
+grReverbf(GR_REVERB_LEVEL_DB, -20.0);
+grReverbf(GR_REVERB_DECAY, 0.01);
+
+grEnable(GL_EQ);
+grEq2f(GR_EQ_LOW, 440.0, -10.0);
+grEq2f(GR_EQ_HIGH, 0, 0);
+grEq2f(GR_EQ_PEAK_1, 5000.0, 12.0);
+
+grGainDBf(0.0);
+grFadeToDBf(0.0);
+
+
+grTestTone();
+
+grTrigger2f(GR_TRIGGER_STOCHASTIC, 40, 0.1);
+
+grGenStream(1, &stream);
+grBindStream(stream);
+
+
+
+grEnable(GR_FILTER);
+grStreamParameterf(GR_FILTER, GR_CUTOFF, 330.0);
+grStreamParameterf(GR_FILTER, GR_Q, 3.0);
+grStreamParameterf(GR_FILTER, GR_TYPE, GR_FILTER_LOWPASS);
+
+grStreamParamterf(GR_ENVELOPE, GR_ATTACK, 0.1);
+grStreamParamterq(GR_ENVELOPE, GR_ATTACK, GR_DISTRIBUTION_GAUSSIAN, 0.1, 0.01, GR_POLARITY_NORMAL);
+grStreamParamterqv(GR_ENVELOPE, GR_ATTACK, mymixture);
+
+grStreamParameterf(GR_TIME, GR_RATE, 2.0);
+grStreamaParameterq(GR_TIME, GR_TIME_DISTRIBUTION, GR_DISTRIBUTION_CAUCHY, 0, 1, GR_POLARITY_POSITIVE);
+
+grMuteStream();
+grUnmuteStream();
+
+grStreamParameteri(GR_SPATIALIZATION, GR_SPATIALIZATION_MODE, GR_PAN_IAD);
+grStreamParameterf(GR_SPATIALIZATION, GR_IAD_SCALE, 0.01);
+
+grEnable(GR_GRAIN_FILTER);
+
+
+grStreamParameterfv(GR_RESONATORS, GR_FREQUENCY_QS, fq_vector, 8);
+
+
+grBindDistribution(spacings);
+f = grSample();
+
+grGenSources(1, &source);
+grAddSource(source);
+grBindSource(source);
+grSourceType(GR_WAVEFORM_SOURCE);
+grLoadWaveform("file.wav");
+
+grSourceParameterq(GR_SOURCE_LOCATION, GR_DISTRIBUTION_UNIFORM, 0.0, 1.0);
+grSourceParameterf(GR_SOURCE_PITCH, 1.0);
+
+grSourceType(GR_WAVEFORM_BANK);
+grLoadWaveformBank("water");
+
+grSourceParameterf(GR_SOURCE_AMPLITUDE, -1.0);
+grSourceParameterf(GR_SOURCE_FREQUENCY, 0.5);
+
+
+
+
+grGenDistribution(1, &distribution);
+grBindDistribution(distribution)
+grAddComponentff(0.1, 1);
+grAddComponentfq(0.1, GR_DISTIRIBUTION_GAUSSIAN, 0.1, 0.01)
+grAddComponentfq(0.2, GR_DISTIRIBUTION_GAUSSIAN, 0.1, 0.01)
+grGetNumComponents();
+grSetComponentiq(1, ...);
+grSetComponentWeightif(1, 0.2);
+
+grSetComponentWeight(0, 0.5);
+grFreezeDistribution();
+
+grStopAudio();
+grShutdownAudio();
+
+
+    
+    

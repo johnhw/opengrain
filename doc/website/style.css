@@ -1,0 +1,91 @@
+
+  body { margin-left: 2%; 
+  margin-right: 2%; 
+width: 80%;
+padding-top:1em;
+padding-bottom:1em;
+  color: #000000;
+    background: #ffffff;
+    border-color: #000000;
+  position: relative; 
+  font-family: "Verdana", Arial, sans-serif; 
+  font-size: 80%;
+  
+  }
+
+
+
+ :link { color: rgb(240, 212, 157); }
+   :visited { color: rgb(190, 160, 80); }
+:visited { color: #ffaf41; }
+
+   
+  div.mbody {
+  background:  #ffffff;
+  color: #407090;
+  padding-left: 1em;
+  padding-right: 1em;
+  width : 650px;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  border: 0px solid;
+border-color: #000000;
+
+}
+
+div.bord {
+background:  #404040;
+color: #ffd247;
+  padding: 0.5em;
+  padding-left: 2em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  
+  
+}
+
+div.blk {
+background:  #000000;
+color: #ffffff;
+  padding: 0.1em;
+  padding-left: 0.1em;
+ border: 20px solid;
+border-color: #000000;
+}
+
+pre {
+background:  #ffffdf;
+  color: #000000;
+  width: 100%;
+  padding-left: 4em;
+  padding-right: 1em;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  
+  font-family: courier; 
+  font-size: 40%;
+}
+  div.indent
+  { 
+    margin-left: +4em;
+  }
+
+
+  div.rind 
+  { 
+    margin-right: -4em;
+  }
+  div.mhead {
+  background:  #ffffff;
+  color: #b0b080;
+  
+  padding-bottom: 0.3em;
+  padding-right: 0.5em;
+  padding-top: 1em;
+  padding-left: 1em;
+  border: 0px solid;
+border-color: #b0b080;
+}
+
+
+

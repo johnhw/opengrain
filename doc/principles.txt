@@ -1,0 +1,92 @@
+I wrote OpenGrain with a few basic principles in mind:
+
+* Sound good
+    OpenGrain is intended to sound good out of the box. That's why it includes
+    things like reverbs and resonator banks, along with a bunch of samples 
+    to get going with. 
+    
+* Do one thing
+    OpenGrain is a granular synthesis API. It is not a general sound API
+    and it does not do everything. It does not try to be physically accurate 
+    and it is not intended to be a "fundamental" audio API.     
+
+* Be Free
+    OpenGrain is BSD licensed, and can be used for any purpose without 
+    restriction, for free or commercially. Dependencies on non-BSD 
+    compatible libraries (i.e. LGPL) are optional.
+
+* Be C
+    OpenGrain is written in plain ANSI C89 (except for C++ style comments). This
+    is for ease of portability and especially for ease of wrapping it for
+    other languages.
+
+* Be clean
+    OpenGrain tries to have simple, clean implementations. The default, 
+    reference, code is not optimized for speed, but written for
+    clarity and simplicity. Modules which need speed can have optional
+    optimised implementations. These are modules ending in _opt.h or _opt.c.
+    The build file determines which versions to use.
+    
+* Be independent
+    OpenGrain strives to depend on as few libraries as possible, without
+    re-inventing the wheel or unreasonably increasing porting effort.
+    Any libraries that are required should be BSD-licensed or optional. 
+    OpenGrain should work meaningfully with nothing but a C compiler.
+
+* Build easily everywhere
+    OpenGrain is intended to be cross-platform. It uses CMake for easy 
+    build file maintenance on many platforms. Platform-specific code
+    should be minimized and kept in other libraries as far as possible.
+    
+* Be separate from realtime
+    OpenGrain implements many things using distributions and
+    time-varying functions so that client applications using the API
+    do not have to work at audio rate or even with tight timing 
+    assumptions.
+    
+    
+
+
+Coding style:
+    Identifiers should not be abbreviated, and should be clear, even if that
+    results in long identifiers! Functions
+    are usually of the form some_action_object_type (lower case, underscore,
+    with the last part giving the type the function operates on). Data
+    structures are of the form ObjectType (capitalized initial letters).
+    Variables should be descriptive, except for index variables like i or j.
+
+    Modules should be as short and simple as possible.
+
+    Objects are allocated dynamically, and as little allocation as possible
+    happens during synthesis. 
+    
+    Objects should usually have a create_xxx() and destroy_xxx() function 
+    which take _no other arguments_ and simply allocate and possibly set 
+    defaults. Configuration of the object should be done separately from 
+    allocation.
+            
+    Avoid hard-coded limits -- use dynamically sizable containers.
+    
+    No C99 extensions (except C++ // comments). Sadly Microsoft aren't
+    likely to support C99 anytime soon.
+    
+    If a parameter could be usefully used stochastically/in a time-varying way,
+    use a Distribution to specify it.
+    
+    Use sensible units wherever possible. Times should be seconds, and gain
+    levels in decibels. 
+    
+    
+If you want to optimize some of the code:
+    If the optimization doens't make the code less clear/simple, just fix it
+    in the reference module file.
+    
+    If the optimization is complex or messy (#ifdefs, unrolled loops etc.),
+    or if it uses any platform specific code at all (ASM, relying on byte
+    orders, GCC extensions) it should go in a xxx_opt.c/.h file and CMake 
+    will choose that version if an optimized build is made. 
+    
+    
+    
+    
+    

@@ -1,0 +1,25 @@
+/** 
+    @file opengrain.in.h
+    @author John Williamson
+    
+    @brief The configure file for the basic defines that OpenGrain uses.
+    This includes the version number, the version string, and defines
+    which select libraries in use.
+    
+    Copyright (c) 2011 All rights reserved.
+    Licensed under the BSD 3 clause license. See COPYING.
+    
+    This file is part of the OpenGrain distribution.
+    http://opengrain.sourceforge.net          
+*/
+
+#define OPENGRAIN_VERSION_MAJOR @OPENGRAIN_VERSION_MAJOR@
+#define OPENGRAIN_VERSION_MINOR @OPENGRAIN_VERSION_MINOR@
+#define OPENGRAIN_VERSION_STRING "OpenGrain v@OPENGRAIN_VERSION_MAJOR@.@OPENGRAIN_VERSION_MINOR@"
+#define OPENGRAIN_COPYRIGHT_STRING "OpenGrain v@OPENGRAIN_VERSION_MAJOR@.@OPENGRAIN_VERSION_MINOR@ (c) John Williamson 2011. Distributed under the BSD License."
+
+// define the library to use
+// can be USE_PORTAUDIO
+@USE_LIBSNDFILE_LIBRARY@
+@USE_AUDIO_LIBRARY@
+@USE_LIBRESAMPLE_LIBRARY@

@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html>
+<head>
+<link type = "text/css" rel = "stylesheet" href ="style.css">  
+<title> OpenGrain </title>
+</head>
+<body>
+
+<div class = "mbody"> 
+<img src="opengrain-large.png"><br>
+<b>OpenGrain</b> is a BSD-licensed library for performing real-time granular synthesis. It is very flexible, and comes with 
+a number of high quality synthesis and effects modules. Any project needing continuous audio feedback can easily incorporate OpenGrain.
+
+<br><br>
+OpenGrain is written in pure C and should compile on any platform. It can use Portaudio for audio output on many platforms, but
+is easy to configure for use with other audio APIs (e.g. as a VST or an AudioUnit). 
+<br><br>
+OpenGrain can produce synchronous or asynchronous grain clouds, and wherever possible, all parameters can be controlled via
+time-varying distributions. This means that an interesting cloud structure can be set up and left to run, or modified in real-time as it is playing.
+<br><br>
+It has an API structure closely resembling that of OpenGL, and should be immediately familiar to developers used to OpenGL coding.
+
+
+
+<h2> Principles </h2>
+OpenGrain was written with a few basic principles in mind:
+
+<ul>
+<li> <b>Sound good</b> <br>
+    OpenGrain is intended to sound good out of the box. That's why it includes
+    things like reverbs and resonator banks, along with a bunch of samples 
+    to get going with. <br><br>
+    
+<li> <b>Do one thing</b> <br>
+    OpenGrain is a granular synthesis API. It is not a general sound API
+    and it does not do everything. It does not try to be physically accurate 
+    and it is not intended to be a "fundamental" audio API.  <br><br>
+
+<li> <b>Be Free</b> <br>
+    OpenGrain is BSD licensed, and can be used for any purpose without 
+    restriction, for free or commercially. Dependencies on non-BSD 
+    compatible libraries (i.e. LGPL) are optional. <br><br>
+
+<li> <b>Be C</b> <br>
+    OpenGrain is written in plain ANSI C89 (except for C++ style comments). This
+    is for ease of portability and especially for ease of wrapping it for
+    other languages. <br><br>
+
+<li> <b>Be clean</b> <br>
+    OpenGrain tries to have simple, clean implementations. The default, 
+    reference, code is not optimized for speed, but written for
+    clarity and simplicity. Modules which need speed can have optional
+    optimised implementations. These are modules ending in _opt.h or _opt.c.
+    The build file determines which versions to use. <br><br>
+    
+<li> <b>Be independent</b> <br>
+    OpenGrain strives to depend on as few libraries as possible, without
+    re-inventing the wheel or unreasonably increasing porting effort.
+    Any libraries that are required are BSD-licensed or optional. 
+    OpenGrain works meaningfully with nothing but a C compiler. <br><br>
+
+<li> <b>Build easily everywhere</b> <br>
+    OpenGrain is intended to be cross-platform. It uses CMake for easy 
+    build file maintenance on many platforms. Platform-specific code
+    is minimized and kept in other libraries as far as possible. <br><br>
+    
+<li> <b>Be independent of realtime</b> <br>
+    OpenGrain implements many things using distributions and
+    time-varying functions so that client applications using the API
+    do not have to work at audio rate or even with tight timing 
+    assumptions. <br><br>
+</ul>
+
+<h2> But what does it sound like? </h2>
+<pre>
+int source, stream;
+
+grInitAudio();
+source = grGenSource(1);
+grBindSouce(source);
+grSourceMode(GR_SINEGRAIN);
+
+stream = grGenStream();
+grBindStream(stream);
+grAddSource(source);
+grStreamParameteri(GR_TIMING, GR_RATE_MODE, GR_RATE_MODE_REGULAR);
+grStreamParameterf(GR_TIMING, GR_RATE, 1.0);
+grStreamParameterf(GR_TIMING, GR_DURATION, 0.05);
+
+distribution = grGenDistribution();
+grBindDistribution(distribution);
+grSetDistributionq(GR_DISTRIBUTION_GAUSSIAN, 440.0, 50.0, 0.0);
+grCurveDestination(GR_DISTRIBUTION_MEAN);
+grCurveType(GR_CURVE_EXPONENTIAL);
+grBegin(GR_CURVE);
+    grCurvePoint(440.0);
+    grCurveTime(20.0);
+    grCurvePoint(4400.0);
+grEnd();
+grStreamParameterqv(GR_FREQUENCY, GR_FREQUENCY);
+
+grBindMixer(grGetMasterMixer());
+grAddStream(stream);
+grMixerParameterf(GR_MIXER, GR_MIXER_GAIN, -120.0);
+grMixerFadeTo(0.0, 0.5);
+grEnable(GR_REVERB);
+grMixerParameterf(GR_REVERB, GR_REVERB_DECAY, 2.0);
+grMixerParameterf(GR_REVERB, GR_REVERB_LEVEL, -20.0);
+
+grStartAudio();
+gruWait(20.0);
+grStopAudio();
+</pre>
+
+
+
+<h2> Dependencies </h2>
+OpenGrain will compile without any external libraries. <br><br>
+However, by default, it will use <a href = "http://www.portaudio.com">Portaudio</a> (MIT license) for audio output; if this is not available, only offline rendering will be available. OpenGrain can also use <a href="http://www.mega-nerd.com/libsndfile/">libsndfile</a> (LGPL license) and <a href="https://ccrma.stanford.edu/~jos/resample/Available_Software.html">libresample</a> (LGPL license) for flexible audio file loading and high-quality resampling. <br><br>If you do not have these installed, OpenGrain will be restricted to reading/writing 16-bit WAV files, and/or will only have linear resampling available for converting sample rates, respectively.
+
+<h2> Building OpenGrain </h2>
+
+<ul>
+<li> Make sure you have <a href="http://www.cmake.com"> CMake </a>
+
+<br><br>
+<li> Go into build/, and do <tt>cmake ..</tt>. You can set the build type
+if you want to build with a compiler other than the default
+(e.g. <tt> cmake .. -G "MinGW Makefiles"</tt>). 
+
+
+<br><br>
+<li>  CMake will try and find the needed libraries. If it can't find
+them, it will build OpenGrain without them (where possible). 
+You can manually set the paths to the libraries in the 
+CMakeLists.txt file in the root directory.
+
+<li>  Just run <tt>make</tt> to build the library.
+
+<li>  If you do <tt>cmake -DOPENGRAIN_OPTIMIZED=1</tt> it will build a version
+using the optimized source files.
+
+<li> If you do <tt>cmake -DCMAKE_BUILD_TYPE=Debug</tt> it will debug version.
+If you do <tt>cmake -DCMAKE_BUILD_TYPE=Release</tt> it will release version.
+Debug and release versions are independent of the <tt>OPENGRAIN_OPTIMIZED</tt> flag.
+
+</ul>
+
+<h3> Systems </h3>
+OpenGrain is known to build and run on:
+<ul>
+    <li> Windows XP, with MinGW
+</ul>
+
+<h2> Acknowledgements </h2>
+OpenGrain incorporates several useful libraries, all licensed under a BSD or public domain license:
+<ul>
+<li> <a href="http://mij.oltrelinux.com/devel/simclist">SimCList</a> for list handling <b>[BSD license]</b><br><br>
+<li> Bob Burtle's ISAAC <a href="http://burtleburtle.net/bob/rand/isaacafa.html">rand.c</a> for random number generation <b>[Public domain]</b><br><br>
+<li> <a href="https://sourceforge.net/projects/kissfft/"> KissFFT </a> for FFT and IFFT operations <b>[BSD license]</b><br><br>
+<li> <a href="http://sound.media.mit.edu/resources/KEMAR.html"> The MIT KEMAR HRTF compact measurements </a> for 3D synthesis <b>[No restrictions on use, except citation]</b><br><br>
+</ul>
+
+
+OpenGrain would not have been possible without: 
+<ul>
+<li> <a href="https://ccrma.stanford.edu/~jos/">Julius O. Smith's</a> outstanding online textbooks and online lecture notes;
+<li> Perry Cook,  <b>Real sound synthesis for interactive audio</b> [A K Peters, 2002]; 
+<li> Curtis Road, <b>Microsound</b> [MIT Press, 2004];
+<li> The <a href="http://www.musicdsp.org">music-dsp</a> archives and mailing list;
+<li> The <a href="http://kvraudio.com">KVRAudio DSP developers forum</a>;
+<li> <a href="http://www.jamminpower.com/jam.html">James A. Moorer's</a> papers on synthesis and effects;
+<li> Jon Dattoro's paper series <a href="https://ccrma.stanford.edu/~dattorro/research.html"> "Effect Design"</a>, parts I--III, in the Journal of the Audio Engineering Society.
+</ul>
+
+<h2> License </h2>
+Copyright (c) 2011, John Williamson<br>
+All rights reserved.
+<br><br>
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+<br><br>
+<div class="indent">
+    Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+</div><br><br>
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+</div>
+</body>
+</html>
+

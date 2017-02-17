@@ -1,0 +1,506 @@
+/**    
+    @file spatializer.c
+    @brief
+    @author John Williamson
+    
+    Copyright (c) 2011 All rights reserved.
+    Licensed under the BSD 3 clause license. See COPYING.
+    
+    This file is part of the OpenGrain distribution.
+    http://opengrain.sourceforge.net   
+*/              
+
+#include "spatializer.h"
+
+
+
+
+// Create a pair of buffers, which point to a single block of data of
+// size 2*n. 
+void create_split_buffer(int n, Buffer **first, Buffer **second)
+{
+    Buffer *buffer;
+    buffer = create_buffer(n*2);
+    
+    *first = create_buffer(0);
+    *second = create_buffer(0);
+    
+    (*first)->x = buffer->x;
+    (*first)->n_samples = n;
+   
+    (*second)->x = &(buffer->x[n]);
+    (*second)->n_samples = n;
+}
+
+// create a spatialization object
+Spatializer *create_spatializer()
+{
+    Spatializer *spatializer;
+    spatializer = malloc(sizeof(*spatializer));
+    
+    // set defaults
+    spatializer->distance_filter_factor = 1.0;    
+    spatializer->distance_delay_factor = 1.0;        
+    spatializer->itd_factor = 1.0;    
+    spatializer->head_damp_factor = 1.0; 
+    spatializer->head_amplitude_factor = 1.0; 
+    spatializer->world_matrix = NULL;
+    spatializer->distance_attenuation_factor = 0.1; 
+       
+    spatializer->spatialization_mode = SPATIALIZATION_PAN;
+    spatializer->stream_location = create_location();
+    set_spherical_location(spatializer->stream_location, 0, 0, 1);
+    spatializer->global_mode = SPATIALIZATION_PER_GRAIN;
+    spatializer->matrix = create_matrix();
+    spatializer->working_matrix = create_matrix();
+    identity_matrix(spatializer->matrix);
+                
+                
+    // create the damping filters for distance/head occlusion effects
+    spatializer->distance_filter_1_left = create_biquad();
+    spatializer->distance_filter_2_left = create_biquad();
+    spatializer->distance_filter_1_right = create_biquad();
+    spatializer->distance_filter_2_right = create_biquad();
+    spatializer->speaker_locations = NULL;
+    spatializer->channels = NULL;
+    spatializer->channel_excesses = NULL;
+    spatializer->hrtf = NULL;
+    
+
+    
+    biquad_lowpass(spatializer->distance_filter_1_left, 500, 2.0);    
+    biquad_lowpass(spatializer->distance_filter_2_left, 2500, 2.0);
+    biquad_lowpass(spatializer->distance_filter_1_right, 500, 2.0);    
+    biquad_lowpass(spatializer->distance_filter_2_right, 2500, 2.0);
+    
+
+    // create the buffers to store the stereo data
+    create_split_buffer(GLOBAL_STATE.frames_per_buffer, &spatializer->left, &spatializer->left_excess);
+    create_split_buffer(GLOBAL_STATE.frames_per_buffer, &spatializer->right, &spatializer->right_excess);
+    create_split_buffer(GLOBAL_STATE.frames_per_buffer, &spatializer->left_distance, &spatializer->left_distance_excess);
+    create_split_buffer(GLOBAL_STATE.frames_per_buffer, &spatializer->right_distance, &spatializer->right_distance_excess);    
+    spatializer->mono = create_buffer(GLOBAL_STATE.frames_per_buffer);
+    spatializer->reverb = create_buffer(GLOBAL_STATE.frames_per_buffer);
+    
+    
+    // clear the excess buffers
+    zero_buffer(spatializer->left_excess);
+    zero_buffer(spatializer->right_excess);    
+    zero_buffer(spatializer->left_distance_excess);
+    zero_buffer(spatializer->right_distance_excess);
+        
+        
+    spatializer->spatializing = 0;
+       
+    return spatializer;   
+}
+
+
+// return the number of channels this spatializer has
+int get_n_channels_spatializer(Spatializer *spatializer)
+{
+    switch(spatializer->spatialization_mode)
+    {
+        case SPATIALIZATION_MONO:
+            return 1;
+            break;
+        case SPATIALIZATION_PAN:
+        case SPATIALIZATION_PAN_ITD:
+        case SPATIALIZATION_3D_FILTERING:
+        case SPATIALIZATION_3D_HRTF:
+            return 2;
+            break;
+        case SPATIALIZATION_MULTICHANNEL:
+            return spatializer->n_channels;
+            break;
+    }
+    return 0;           
+}
+
+// return the channel given
+Buffer *get_channel_spatializer(Spatializer *spatializer, int i)
+{
+    switch(spatializer->spatialization_mode)
+    {
+        case SPATIALIZATION_MONO:
+            return spatializer->mono;
+            break;
+        case SPATIALIZATION_PAN:
+        case SPATIALIZATION_PAN_ITD:
+        case SPATIALIZATION_3D_FILTERING:
+        case SPATIALIZATION_3D_HRTF:
+            if(i==0)
+                return spatializer->left;
+            else    
+                return spatializer->right;
+            break;
+        case SPATIALIZATION_MULTICHANNEL:
+            return (Buffer *)list_get_at(spatializer->channels, i);
+            break;
+    }
+    return NULL;           
+}
+
+// set a _pointer_ to the world transformation matrix
+void set_world_matrix_spatializer(Spatializer *spatializer, Matrix3D *matrix)
+{
+    spatializer->world_matrix = matrix;
+}
+
+// destroy any multichannel data
+void destroy_channels_spatializer(Spatializer *spatializer)
+{   
+    int i;    
+    if(spatializer->channels)
+    {
+        for(i=0;i<list_size(spatializer->channels);i++)        
+            destroy_buffer((Buffer*)list_get_at(spatializer->channels, i));            
+        list_destroy(spatializer->channels);
+        free(spatializer->channels);       
+    }    
+}
+
+// set the hrtf model for spatialization, and enable HRTF mode
+// HRTF spatialization can _only_ be used with per stream spatialization
+void set_hrtf_spatializer(Spatializer *spatializer, HRTFModel *model)
+{   
+    spatializer->spatialization_mode = SPATIALIZATION_3D_HRTF;
+    spatializer->global_mode = SPATIALIZATION_PER_STREAM;
+    if(spatializer->hrtf)
+        destroy_hrtf_convolver(spatializer->hrtf);
+    spatializer->hrtf = create_hrtf_convolver(model);   
+}
+
+// set the speaker locations for multichannel spatialization
+// takes a _reference_ to the speaker location list!
+void set_multichannel_spatializer(Spatializer *spatializer, list_t *speaker_locations)
+{
+
+    int i;
+    Buffer *channel, *channel_excess;
+    spatializer->speaker_locations = speaker_locations;    
+    
+    // get rid of any existing multichannel data
+    destroy_channels_spatializer(spatializer);    
+    spatializer->channels = malloc(sizeof(*spatializer->channels));
+    spatializer->channel_excesses = malloc(sizeof(*spatializer->channel_excesses));
+    list_init(spatializer->channels);
+    list_init(spatializer->channel_excesses);
+    spatializer->spatialization_mode = SPATIALIZATION_MULTICHANNEL;
+    
+    // allocate buffers
+    for(i=0;i<list_size(speaker_locations);i++)
+    {
+        create_split_buffer(GLOBAL_STATE.frames_per_buffer, &channel, &channel_excess);
+        zero_buffer(channel);
+        zero_buffer(channel_excess);
+        list_append(spatializer->channels, channel);
+        list_append(spatializer->channels, channel_excess);
+    }
+            
+    spatializer->n_channels = list_size(speaker_locations);
+    
+}
+
+// free a spatialization object
+void destroy_spatializer(Spatializer *spatializer)
+{
+ 
+    destroy_biquad(spatializer->distance_filter_1_left);
+    destroy_biquad(spatializer->distance_filter_2_left);
+    destroy_biquad(spatializer->distance_filter_1_right);
+    destroy_biquad(spatializer->distance_filter_2_right);
+    
+    destroy_buffer(spatializer->left);
+    destroy_buffer(spatializer->right);
+    destroy_buffer(spatializer->left_distance);
+    destroy_buffer(spatializer->right_distance);
+    
+    destroy_channels_spatializer(spatializer);
+    destroy_matrix(spatializer->working_matrix);
+    destroy_matrix(spatializer->matrix);
+    
+    
+    if(spatializer->hrtf)
+        destroy_hrtf_convolver(spatializer->hrtf);
+    free(spatializer);        
+}
+
+// return the location object of this stream
+Location3D *get_location_spatializer(Spatializer *spatializer)
+{
+    return spatializer->stream_location;
+}
+
+Matrix3D *get_matrix_spatializer(Spatializer *spatializer)
+{
+    return spatializer->matrix;
+}
+
+// set the spatialization mode (mono, stereo pan, pan + iad, fake 3d, hrtf 3d) and per stream/per grain
+void set_spatializer_mode(Spatializer *spatializer, int mode, int per_stream)
+{
+    spatializer->spatialization_mode = mode;
+    
+    spatializer->global_mode = per_stream;
+}
+
+
+
+// begin spatializing into a new buffer
+void start_spatializer(Spatializer *spatializer)
+{
+    int i;
+    Buffer *channel, *channel_excess;
+    
+    // copy old "second buffer" into this one
+    copy_buffer(spatializer->left, spatializer->left_excess);
+    copy_buffer(spatializer->right, spatializer->right_excess);
+    copy_buffer(spatializer->left_distance, spatializer->left_distance_excess);
+    copy_buffer(spatializer->right_distance, spatializer->right_distance_excess);
+    
+    // clear the second buffer
+    zero_buffer(spatializer->left_excess);
+    zero_buffer(spatializer->right_excess);    
+    zero_buffer(spatializer->left_distance_excess);
+    zero_buffer(spatializer->right_distance_excess);
+       
+    zero_buffer(spatializer->mono);
+    zero_buffer(spatializer->reverb);
+    
+    // only for multichannel spatialization
+    if(spatializer->channels)
+    {        
+        for(i=0;i<list_size(spatializer->channels);i++)
+        {
+            channel = (Buffer*)list_get_at(spatializer->channels, i);
+            channel_excess = (Buffer*)list_get_at(spatializer->channel_excesses, i);            
+            copy_buffer(channel, channel_excess);            
+            zero_buffer(channel);
+            zero_buffer(channel_excess);            
+        }
+    }
+    
+    spatializer->spatializing = 1;
+
+}
+
+// stop spatializing 
+void stop_spatializer(Spatializer *spatializer)
+{
+  int i;
+  float l,r;
+  spatializer->spatializing = 0;
+  
+  // spatialize entire buffer if needed
+  if(spatializer->global_mode == SPATIALIZATION_PER_STREAM)
+    spatialize(spatializer, spatializer->stream_location, 1.0, spatializer->mono, 0, spatializer->mono->n_samples);
+    
+    
+  
+  
+  if(spatializer->spatialization_mode == SPATIALIZATION_3D_FILTERING)
+  {
+      for(i=0;i<spatializer->left->n_samples;i++)
+      {
+     
+        // filter back buffers and add them to the front buffers
+        l = process_biquad(spatializer->distance_filter_2_left, spatializer->left_distance->x[i]);
+        l = process_biquad(spatializer->distance_filter_1_left, l);
+        r = process_biquad(spatializer->distance_filter_2_right, spatializer->right_distance->x[i]);
+        r = process_biquad(spatializer->distance_filter_2_right, r);
+                
+        spatializer->left->x[i] += l;
+        spatializer->right->x[i] += r;    
+      }
+  }    
+}
+
+
+// get the number of samples of delay for the given distance, or the delay for the whole stream
+// if per stream spatialization is in effect
+int get_sample_delay_spatializer(Spatializer *spatializer, float distance)
+{
+    
+    if(spatializer->global_mode == SPATIALIZATION_PER_GRAIN)
+        return (spatializer->distance_delay_factor * distance) * GLOBAL_STATE.sample_rate / 320.0;
+    else
+        return (spatializer->distance_delay_factor * spatializer->stream_location->distance) * GLOBAL_STATE.sample_rate / 320.0;
+}
+
+
+
+// apply amplitude, grain RMS monitoring and spatialisation.
+void spatialize(Spatializer *spatializer, Location3D *location, float amplitude, Buffer *mono,  int offset, int len)
+{
+    float l,r;    
+    int spatialization_mode;
+    Location3D transformed;
+    float overall_gain, reverb_gain, attenuation;
+    
+    spatialization_mode = spatializer->spatialization_mode;    
+    
+    // get transformed location (world followed by local matrix)
+    if(spatializer->world_matrix)
+        copy_matrix(spatializer->working_matrix, spatializer->world_matrix);
+    else
+        // identity if no world matrix
+        identity_matrix(spatializer->working_matrix);        
+        
+    multiply_matrix(spatializer->working_matrix, spatializer->matrix);
+    
+    transform_location(&transformed, location, spatializer->working_matrix);
+    location = &transformed; // point location to the _transformed_ position
+    
+    
+    
+    // just mix in if global mode
+    if(spatializer->global_mode == SPATIALIZATION_PER_STREAM && spatializer->spatializing)
+    {
+        mix_buffer_offset_weighted(spatializer->mono, mono, offset, len, amplitude);
+        return;        
+    }
+    
+    // gains
+    attenuation = 1.0 / (1+location->distance * spatializer->distance_attenuation_factor);
+    overall_gain = amplitude * attenuation;
+    reverb_gain = amplitude / (1+sqrt(location->distance) * spatializer->distance_attenuation_factor);
+    // always mix some into the additional reverb buffer...
+    // mix less attenuated copy into the reverb buffer
+    
+    mix_buffer_offset_weighted(spatializer->reverb, mono, offset, len, reverb_gain);
+    
+    
+    
+    if(spatialization_mode==SPATIALIZATION_MONO)
+    {
+            
+        mix_buffer_offset_weighted(spatializer->left, mono, offset, len, overall_gain);
+        mix_buffer_offset_weighted(spatializer->right, mono, offset, len, overall_gain);
+    }
+    
+    if(spatialization_mode==SPATIALIZATION_PAN)
+    {
+        float panning = sin(TO_RADIANS(location->azimuth));
+        pan(1.0, panning, &l, &r);                                       
+        mix_buffer_offset_weighted(spatializer->left, mono, offset, len, l * overall_gain);
+        mix_buffer_offset_weighted(spatializer->right, mono, offset, len, r * overall_gain);               
+    }
+    
+    if(spatialization_mode==SPATIALIZATION_PAN_ITD)
+    {
+        float ldelay, rdelay;
+        float panning = sin(TO_RADIANS(location->azimuth));
+        
+        // channel delay
+        rdelay = (panning + 1) * 660e-6 * GLOBAL_STATE.sample_rate * spatializer->itd_factor;
+        ldelay = (1.0-panning) * 660e-6 * GLOBAL_STATE.sample_rate * spatializer->itd_factor;
+        
+        
+        pan(1.0, panning, &l, &r);                                       
+        mix_buffer_offset_weighted(spatializer->left, mono, offset+rdelay, len, l * overall_gain);
+        mix_buffer_offset_weighted(spatializer->right, mono, offset+ldelay, len, r * overall_gain);                              
+    }        
+    
+    
+    if(spatialization_mode==SPATIALIZATION_3D_FILTERING)
+    {
+        float ldelay, rdelay, ql, qr;
+        float filtered_l, filtered_r;        
+        float panning = sin(TO_RADIANS(location->azimuth));
+        float  filtering_gain;
+        
+        // channel delay
+        rdelay = (panning + 1) * 660e-6 * GLOBAL_STATE.sample_rate * spatializer->itd_factor;
+        ldelay = (1.0-panning) * 660e-6 * GLOBAL_STATE.sample_rate * spatializer->itd_factor;
+        
+        // get panning and distance decay
+        pan(1.0, panning, &l, &r);                                       
+        ql = l*overall_gain; 
+        qr = r*overall_gain; 
+        
+        // compute distance filtering component
+        filtering_gain = dB_to_gain(location->distance * -0.1 * spatializer->distance_filter_factor);
+        
+                
+        // compute head-related filtering component
+        filtered_l = panning;
+        if(filtered_l<0)
+            filtered_l =0;
+                
+        filtered_r = -panning;
+        if(filtered_r<0)
+            filtered_r =0;
+        
+        // mix unfiltered portion into the "front buffer"        
+        mix_buffer_offset_weighted(spatializer->left, mono, offset+ldelay, len, ql * (filtering_gain)*(1-filtered_l));
+        mix_buffer_offset_weighted(spatializer->right, mono, offset+rdelay, len, qr * (filtering_gain)*(1-filtered_r));                              
+        
+        // mix filtered potion into the "back buffer"
+        mix_buffer_offset_weighted(spatializer->left_distance, mono, offset+ldelay, len, ql * (1-filtering_gain)*(filtered_l));
+        mix_buffer_offset_weighted(spatializer->right_distance, mono, offset+rdelay, len, qr * (1-filtering_gain)*(filtered_r));                                                          
+    }
+    
+    // multi-speaker spatialization
+     if(spatialization_mode==SPATIALIZATION_MULTICHANNEL && spatializer->speaker_locations)
+     {
+        float d, dx, dy, dz;
+        Location3D *speaker_location;
+        Buffer *channel;        
+        int i, delay;
+        
+        // go through each speaker...
+        for(i=0;i<list_size(spatializer->speaker_locations);i++)
+        {
+                // work out speaker distance
+               speaker_location = (Location3D *)list_get_at(spatializer->speaker_locations,i);
+               dx = speaker_location->x - location->x;
+               dy = speaker_location->y - location->y;
+               dz = speaker_location->z - location->z;            
+               d = sqrt(dx*dx+dy*dy+dz*dz);
+               
+               // get gain
+               attenuation = 1.0 / (1+d * spatializer->distance_attenuation_factor);
+               overall_gain = amplitude * attenuation; 
+               channel = list_get_at(spatializer->channels, i);
+               
+               // get delay (and cap it)
+               // should use normalized delays (normalized to nearest speaker = 0, to avoid delay saturation)
+               delay = spatializer->itd_factor * GLOBAL_STATE.sample_rate * d * 660e-6;
+               if(delay>GLOBAL_STATE.frames_per_buffer-1)
+                 delay = GLOBAL_STATE.frames_per_buffer-1;
+               
+               // mix in
+               mix_buffer_offset_weighted(channel, mono, offset+delay, len, overall_gain);
+        }
+             
+     }
+     
+     // HRTF spatialization
+     if(spatialization_mode==SPATIALIZATION_3D_HRTF && spatializer->hrtf && spatializer->global_mode == SPATIALIZATION_PER_STREAM)
+    {
+        
+        float filtering_gain;
+        // compute distance filtering component
+        filtering_gain = dB_to_gain(location->distance * -0.1 * spatializer->distance_filter_factor);
+        
+        set_hrtf_convolver(spatializer->hrtf, location->azimuth, location->elevation);
+        
+        // convolve and then split between near and far buffers
+        // this works because of the linearity of the HRTF and distance filtering operations (they commute)
+        hrtf_convolve(spatializer->hrtf, mono, spatializer->left, spatializer->right);                
+        
+        mix_buffer(spatializer->left_distance, spatializer->left, overall_gain*(1-filtering_gain));
+        mix_buffer(spatializer->right_distance, spatializer->right, overall_gain*(1-filtering_gain));           
+        scale_buffer(spatializer->left, overall_gain*filtering_gain);
+        scale_buffer(spatializer->right, overall_gain*filtering_gain);                
+        
+    }
+    
+    
+    
+    
+}
+
+
+

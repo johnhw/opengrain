@@ -1,0 +1,19 @@
+Make sure you have CMake
+
+Go into build, and do "CMake ..". You can set the build type
+if you want to build with a compiler other than the default
+(e.g. -G "MinGW Makefiles"). 
+
+CMake will try and find the needed libraries. If it can't find
+them, it will build OpenGrain without them (where possible). 
+You can manually set the paths to the libraries in the 
+CMakeLists.txt file in the root directory.
+
+Then just run make to build it.
+
+If you do "cmake -DOPENGRAIN_OPTIMIZED=1" it will build a version
+using the optimized source files.
+
+If you do "cmake -DCMAKE_BUILD_TYPE=Debug" it will debug version.
+If you do "cmake -DCMAKE_BUILD_TYPE=Release" it will release version.
+Debug and release versions are independent of the OPTIMIZED flag.
