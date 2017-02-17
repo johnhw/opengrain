@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129
+END
+TIPS
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/TIPS
+END
+_kiss_fft_guts.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/_kiss_fft_guts.h
+END
+.hgignore
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/.hgignore
+END
+.hg_archival.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/.hg_archival.txt
+END
+CHANGELOG
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/CHANGELOG
+END
+kissfft.hh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/kissfft.hh
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/COPYING
+END
+README.simd
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/README.simd
+END
+kiss_fft.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/kiss_fft.c
+END
+.hgtags
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/.hgtags
+END
+.cvsignore
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/.cvsignore
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/Makefile
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/README
+END
+kiss_fft.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/kiss_fft.h
+END

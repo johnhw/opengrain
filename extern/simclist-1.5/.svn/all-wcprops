@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5
+END
+._doc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._doc
+END
+Doxyfile
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/Doxyfile
+END
+Changes
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/Changes
+END
+simclist.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/simclist.c
+END
+._perftest
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._perftest
+END
+._CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._CMakeLists.txt
+END
+._simclist.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._simclist.h
+END
+._examples
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._examples
+END
+._regrtest
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/._regrtest
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/CMakeLists.txt
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/README
+END
+simclist.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/simclist-1.5/simclist.h
+END

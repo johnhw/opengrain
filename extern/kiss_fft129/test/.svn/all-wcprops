@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test
+END
+doit.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/doit.c
+END
+twotonetest.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/twotonetest.c
+END
+fastfir.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/fastfir.py
+END
+compfft.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/compfft.py
+END
+benchfftw.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/benchfftw.c
+END
+benchkiss.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/benchkiss.c
+END
+mk_test.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/mk_test.py
+END
+pstats.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/pstats.c
+END
+testkiss.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/testkiss.py
+END
+test_real.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/test_real.c
+END
+pstats.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/pstats.h
+END
+test_vs_dft.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/test_vs_dft.c
+END
+testcpp.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/testcpp.cc
+END
+fft.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/fft.py
+END
+tailscrap.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/tailscrap.m
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opengrain/!svn/ver/1/extern/kiss_fft129/test/Makefile
+END
